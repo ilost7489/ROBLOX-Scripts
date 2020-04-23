@@ -1,0 +1,22 @@
+-- This creates leaderstats, loads them on join, and saves the value to a datastore on leave.
+
+local DATASTORE = game:Getservice("DataStoreService"):GetDataStore("Your datastore here")
+
+game.Players.PlayerAdded:Connect(function(Player)
+    local leaderstats = Instance.new("Folder", Player)
+    leaderstats.Name = "leaderstats"
+    local Money = Instance.new("IntValue", leaderstats)
+    Money.Name = "Money"
+    Money.Value = 100
+    local UID = Player.UserId
+    local Data = DATASTORE:GetAsync(UID)
+    if Data ~= nil then
+        Money.Value = Data[1]
+    end
+end)
+
+game.Players.PlayerRemoving:Connect(function(Player)
+    local UID = Player.UserId
+    local Money = Player.leaderstats.Money.Value
+    DATASTORE:SetAsync(DATASTORE, Money)
+end)
