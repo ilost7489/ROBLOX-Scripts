@@ -1,0 +1,99 @@
+-- Connects items together on a 2D plane. This is just me dumping some code here so it isn't optimized for copy + paste.
+-- This was also before I understood how tables worked it seems lol.
+
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+local down
+local mtarget
+
+function clickObj()
+	if mouse.Target.Parent.Name ~= "Unclickables" then
+	    if mouse.Target ~= nil then
+		    mtarget = mouse.Target
+		    down = true
+		    mtarget.Transparency = 0.5
+		    mtarget.CanCollide = false
+		    mouse.TargetFilter = mtarget
+	    end
+    end
+end
+mouse.Button1Down:connect(clickObj)
+
+function mouseMove()
+	if down and mtarget then
+		local posX,posY,posZ = mouse.hit.X, mouse.hit.Y, mouse.hit.Z
+		mtarget.Position = Vector3.new(posX,posY,posZ)
+	    if mtarget.Name == "SmallFuelTank".. mtarget.PartNumber.Value then
+		    if mouse.Target.Name == "Side1" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X, mouse.Target.Position.Y +3, mouse.Target.Position.Z)
+		    end
+		    if mouse.Target.Name == "Side2" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X, mouse.Target.Position.Y -3, mouse.Target.Position.Z)
+		    end
+		    if mouse.Target.Name == "Side3" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X -3, mouse.Target.Position.Y, mouse.Target.Position.Z)
+		    end
+		    if mouse.Target.Name == "Side4" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X +3, mouse.Target.Position.Y, mouse.Target.Position.Z)
+		    end
+	end
+	    if mtarget.Name == "MediumFuelTank".. mtarget.PartNumber.Value then
+		    if mouse.Target.Name == "Side1" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X, mouse.Target.Position.Y +6, mouse.Target.Position.Z)
+		    end
+		    if mouse.Target.Name == "Side2" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X, mouse.Target.Position.Y -6, mouse.Target.Position.Z)
+		    end
+		    if mouse.Target.Name == "Side3" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X -3, mouse.Target.Position.Y -3, mouse.Target.Position.Z)
+			    if mouse.Target.Parent.Parent.Name == "MediumFuelTank".. mouse.Target.Parent.Parent.PartNumber.Value then
+			        mtarget.Position = Vector3.new(mouse.Target.Position.X -3, mouse.Target.Position.Y , mouse.Target.Position.Z)
+			    end
+		    end
+		    if mouse.Target.Name == "Side4" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X +3, mouse.Target.Position.Y -3, mouse.Target.Position.Z)
+			   if mouse.Target.Parent.Parent.Name == "MediumFuelTank".. mouse.Target.Parent.Parent.PartNumber.Value then
+			        mtarget.Position = Vector3.new(mouse.Target.Position.X +3, mouse.Target.Position.Y   , mouse.Target.Position.Z)
+			    end
+		end
+	      end
+        if mtarget.Name == "Mercury".. mtarget.PartNumber.Value then
+		    if mouse.Target.Name == "Side1" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X, mouse.Target.Position.Y +3, mouse.Target.Position.Z)
+		    end
+		    if mouse.Target.Name == "Side2" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X, mouse.Target.Position.Y -3, mouse.Target.Position.Z)
+		    end
+  end
+ if mtarget.Name == "SolidBooster".. mtarget.PartNumber.Value then
+		    if mouse.Target.Name == "Side1" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X, mouse.Target.Position.Y +3, mouse.Target.Position.Z)
+		    end
+		    if mouse.Target.Name == "Side2" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X, mouse.Target.Position.Y -3, mouse.Target.Position.Z)
+		    end
+		    if mouse.Target.Name == "Side3" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X -3, mouse.Target.Position.Y -3, mouse.Target.Position.Z)
+			    if mouse.Target.Parent.Parent.Name == "MediumFuelTank".. mouse.Target.Parent.Parent.PartNumber.Value then
+			        mtarget.Position = Vector3.new(mouse.Target.Position.X -3, mouse.Target.Position.Y , mouse.Target.Position.Z)
+			    end
+		    end
+		    if mouse.Target.Name == "Side4" then
+			    mtarget.Position = Vector3.new(mouse.Target.Position.X +3, mouse.Target.Position.Y -3, mouse.Target.Position.Z)
+			end
+end	
+    end
+end
+mouse.Move:connect(mouseMove)
+
+function mouseDown()
+	down = false
+	local Name = mtarget.Name
+	local Position = mtarget.Position
+	local Orientation = mtarget.Orientation
+	game.ReplicatedStorage.Placement:FireServer(Name, Position, Orientation)
+	mtarget.Transparency = 0
+	mouse.TargetFilter = nil
+	
+end
+mouse.Button1Up:connect(mouseDown)
