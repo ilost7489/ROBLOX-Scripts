@@ -1,0 +1,36 @@
+-- This script is used to hand another player an item
+
+-- LOCAL SCRIPT FOR UI
+-------------------------
+local GIVE_HELD_ITEM = true -- Put if you want to give the item the giving player is holding.
+local ITEM_TO_GIVE = nil -- Change to a custom object to give the player if GIVE_HELD_ITEM is false.
+
+function GiveHeldItem(PlayerToGive)
+    local Item
+    if GIVE_HELD_ITEM == true then
+        for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            if v.ClassName == "Tool" then
+                Item = v
+            end
+        end
+    end
+    
+    if ITEM_TO_GIVE ~= nil then
+        Item = ITEM_TO_GIVE
+    end
+    
+    game.ReplicatedStorage.GiveEvents.Give:FireServer(Item, PlayerToGive)
+end
+----------------------------
+
+-- SERVER SCRIPT FOR SERVER
+---------------------------
+local EventsFolder = Instance.new("Folder", game.ReplicatedStorage)
+EventsFolder.Name = "GiveEvents"
+local Give = Instance.new("RemoteEvent", EventsFolder)
+Give.Name = "Give"
+
+Give.OnServerEvent:Connect(function(PlayerSend, Item, PlayerRecieve)
+    Item.Parent = PlayerRecieve.Backpack
+end)
+--------------------------
