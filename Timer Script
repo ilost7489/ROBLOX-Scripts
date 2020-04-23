@@ -1,0 +1,27 @@
+-- Timer script that converts seconds into miutes and hours.
+
+local SHOW_EXTRA_ZEROS = true -- Toggle weather to show estra zero's.
+
+function NumCalc(Secs) -- Call this whoth the seconds value when you want to calculate H:M:S
+    local Minutes = (Secs/60%60)
+    Minutes = math.floor(Minutes)
+    local Hours = (Minutes/60%60)
+    Hours = math.floor(Hours)
+    local Seconds = Secs -Minutes*60
+    local SecondsShow = Seconds
+    local MinutesShow = Minutes
+    local HoursShow = Hours
+    
+    if SHOW_EXTRA_ZEROS == true then
+        if Minutes <10 then
+            MinutesShow = "0".. Minutes
+        end
+        if Hours <10 then
+            HoursShow = "0".. Hours
+        end
+        if Seconds <10 then
+            SecondsShow = "0".. Seconds
+        end
+    end
+    return (HoursShow..":"..MinutesShow..":"..SecondsShow)
+end
